@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css.css" />
+    <script src="jQuery/jquery-1.9.1.min.js"></script>
+    <script src="jQuery/jquery.jsonp-2.4.0.min.js"></script>
+    <script src="window.js" charset="UTF-8"></script>
+</head>
+<body>
+<div class="main">
+    <table class="table">
+        <tr>
+            <th>
+            <div style="width: 200px;font-weight: bold">链接</div>
+                </th>
+            <th>
+                <div style="width: 350px;font-weight: bold">标题 </div>
+                </th>
+            <th>
+                <div style="width: 150px;font-weight: bold">深度</div>
+                </th>
+            <th>
+                <div style="width: 150px;font-weight: bold">状态 </div>
+                </th>
+            <th>
+                <div style="width: 150px;font-weight: bold">来源 </div>
+                </th>
+            <th>
+                <div style="width: 150px;font-weight: bold">关键字 </div>
+            </th>
+            <th>
+                <div style="width: 150px;font-weight: bold">路径 </div>
+            </th>
+        </tr>
+        <tr>
+            <td colspan="7">
+            <div class="tableHrM"></div>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    function put(){
+        alert("<a herf='http://www.baidu.com/s?wd=%E5%91%B5%E5%91%B5&ie=utf-8&pn=0'>链接1</a>");
+    }
+$(function() {
+    $.ajax({
+        type: "GET",
+        url: "json.json",
+        dataType: "json",
+        success: function (data) {
+            $.each(data, function (i, item) {
+                var id=item.id;
+                var title=item.title;
+                var deep = item.deep;
+                var status = item.status;
+                var root = item.root;
+                var link = item.link;
+                var weight = item.weight;
+                var path= new Array();
+
+                var u = 0;
+                var Next = 0;
+                var Nextl = 0;
+                creatediv();
+
+                do {
+
+                    var myPath = item.path.slice(Next);
+                    var Location = myPath.indexOf(">");
+                    if(Location==-1){
+                        path[u]= myPath;
+                        $(".msgDiv").eq(i).append("<a href='"+path[u]+"' target='_blank'>链接"+u+"<br />");
+                    }
+                    else {
+                        path[u] = myPath.slice(0, Location);
+                        $(".msgDiv").eq(i).append(" <a href='"+path[u]+"' target='_blank'>链接"+u+"<br />");
+                        Nextl = Next+Location;
+                        Next = Nextl +1;
+                        u++;
+                    }
+
+                }
+                while(Location!=-1)
+                delWinD();
+
+                $(".table").append("  <tr> <th> <div class='box'> <span id='id"+i+"'></span></div> </th> <th> <div class='box'> <a href='"+link+"' id='title"+i+"' target='_blank'></span> </div> </th> <th> <div class='box'> <span id='deep"+i+"'></span> </div> </th> <th> <div class='box'> <span id='status"+i+"'></span> </div> </th> <th> <div class='box'> <span id='root"+i+"'></span> </div> </th> <th><img src='image/nya.png' title='"+weight+"'></th><th><button id='button"+i+"'  >按钮"+i+"</button></th> </tr><tr> <td colspan='7'> <div class='tableHrS'></div> </td> </tr>");
+                $("#button"+i).click(function() {
+                    console.log("ok");
+                    $('.msgDiv')[i].style.display = '';
+                    $('.bgDiv')[i].style.display = '';
+                })
+                $("#id"+i).append(id);
+                $("#title"+i).append(title);
+                if(title==null){$("#title"+i).append("无标题");}
+                $("#deep"+i).append(deep);
+                $("#status"+i).append(status);
+                $("#root"+i).append(root);
+            })
+        },
+        error: function () {
+            alert("error");
+        }
+
+    })
+});
+</script>
+</body>
+</html>
